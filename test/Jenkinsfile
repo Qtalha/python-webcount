@@ -3,19 +3,20 @@ pipeline {
     stages{
         stage ('pull from vcs'){
             steps {
-                git url : 'https://github.com/Qtalha/python-webcount.git'
-                branch : 'python'
+                git url: 'https://github.com/Qtalha/python-webcount.git',
+                branch: 'python'
             }
-            stage ('archive results'){
-                steps { 
-                    junit '/** junit-python39.xml'
-
-                }
-            }
-            stage (artifacts){
-                archiveArtifacts artifacts: '**/webcount-0.1.zip' 
-            }
-
+        }
+            stage('run tox'){
+        steps{
+            sh 'tox -e py'
         }
     }
+    stage('test reports'){
+        steps{
+        junit 'junit-py.xml'
+        }
+    }
+    }
 }
+
